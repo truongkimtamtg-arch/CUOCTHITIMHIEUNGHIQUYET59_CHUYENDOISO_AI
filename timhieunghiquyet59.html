@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thi trắc nghiệm: Hội nhập Quốc tế & Chuyển đổi số</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        p.subtitle {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .student-info {
+            background-color: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .student-info input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .question-block {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .option-label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .option-label:hover {
+            background-color: #f1f3f4;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #1557b0;
+        }
+        #result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e6f4ea;
+            border: 1px solid #ceead6;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #137333;
+            display: none;
+        }
+        .correct { color: #137333; font-weight: bold; }
+        .incorrect { color: #d93025; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cuộc thi Tìm hiểu Nghị quyết 59-NQ/TW</h1>
+    <p class="subtitle">Chủ đề: Hội nhập quốc tế, Chuyển đổi số và Ứng dụng AI an toàn</p>
+    
+    <div class="student-info">
+        <label for="studentName"><strong>Họ và tên học sinh:</strong></label>
+        <input type="text" id="studentName" placeholder="Nhập họ tên của bạn...">
+        
+        <label for="studentClass" style="display:block; margin-top:10px;"><strong>Lớp:</strong></label>
+        <input type="text" id="studentClass" placeholder="Nhập lớp (VD: 12A1)...">
+    </div>
+
+    <div id="quiz-form">
+        <!-- Các câu hỏi sẽ được JavaScript tạo tự động tại đây -->
+    </div>
+
+    <button class="submit-btn" onclick="chamDiem()">Nộp bài & Chấm điểm</button>
+    
+    <div id="result-container">
+        <!-- Kết quả điểm số sẽ hiển thị ở đây -->
+    </div>
+</div>
+
+<script>
+    // Mảng lưu trữ dữ liệu 20 câu hỏi và đáp án
+    const quizData = [
+        {
+            q: "Câu 1: Nghị quyết số 59-NQ/TW ngày 24/01/2025 của Bộ Chính trị có nội dung trọng tâm là gì?",
+            opts: { A: "Đổi mới căn bản, toàn diện giáo dục và đào tạo.", B: "Hội nhập quốc tế trong tình hình mới.", C: "Đột phá phát triển khoa học, công nghệ và đổi mới sáng tạo.", D: "Cải cách chính sách tiền lương và bảo hiểm xã hội." },
+            ans: "B"
+        },
+        {
+            q: "Câu 2: Theo Nghị quyết 59-NQ/TW, mục tiêu tổng quát phấn đấu đến giữa thế kỷ XXI, nước ta trở thành:",
+            opts: { A: "Nước có nền công nghiệp hiện đại, đứng đầu khu vực Đông Nam Á.", B: "Nước đang phát triển có thu nhập trung bình cao.", C: "Nước phát triển, thu nhập cao theo định hướng xã hội chủ nghĩa.", D: "Trung tâm kinh tế số, công nghệ số của toàn cầu." },
+            ans: "C"
+        },
+        {
+            q: "Câu 3: Nghị quyết 59-NQ/TW xác định quan điểm xuyên suốt: Hội nhập quốc tế là sự nghiệp của ai?",
+            opts: { A: "Của riêng ngành Ngoại giao và các bộ, ban, ngành Trung ương.", B: "Của toàn dân tộc, dưới sự lãnh đạo tuyệt đối, trực tiếp và toàn diện của Đảng.", C: "Của đội ngũ trí thức và các doanh nghiệp, tập đoàn kinh tế.", D: "Của hệ thống các trường đại học và viện nghiên cứu." },
+            ans: "B"
+        },
+        {
+            q: "Câu 4: Nhiệm vụ nâng cao hiệu quả hội nhập kinh tế quốc tế gắn liền với việc thúc đẩy các yếu tố nào?",
+            opts: { A: "Đổi mới mô hình tăng trưởng, cơ cấu lại nền kinh tế và thúc đẩy chuyển đổi số.", B: "Tập trung khai thác tài nguyên thiên nhiên và xuất khẩu sản phẩm thô.", C: "Duy trì lợi thế cạnh tranh bằng nguồn lao động giá rẻ.", D: "Trở thành công xưởng gia công của thế giới." },
+            ans: "A"
+        },
+        {
+            q: "Câu 5: Nhiệm vụ lớn thứ 4 nhấn mạnh đẩy mạnh hội nhập quốc tế trên lĩnh vực nào để nâng cao năng lực cạnh tranh?",
+            opts: { A: "Thể thao và nghệ thuật.", B: "Khoa học, công nghệ và đổi mới sáng tạo.", C: "Nông nghiệp và phát triển nông thôn.", D: "Bất động sản và dịch vụ thương mại." },
+            ans: "B"
+        },
+        {
+            q: "Câu 6: Yêu cầu xây dựng môi trường văn hóa số phải phù hợp với những yếu tố nào?",
+            opts: { A: "Văn hóa phương Tây và các nước phát triển.", B: "Nền kinh tế số, xã hội số và công dân số.", C: "Nền kinh tế truyền thống và văn hóa bản địa.", D: "Tiêu chuẩn của các tập đoàn công nghệ đa quốc gia." },
+            ans: "B"
+        },
+        {
+            q: "Câu 7: Việc ứng dụng Trí tuệ nhân tạo (AI) trong giáo dục nhằm mục tiêu cốt lõi nào?",
+            opts: { A: "Thay thế hoàn toàn vai trò của giáo viên đứng lớp.", B: "Cắt giảm nhân sự quản lý giáo dục.", C: "Tối ưu hóa quản trị, cá nhân hóa lộ trình học tập, đổi mới phương pháp dạy học, kiểm tra, đánh giá.", D: "Bắt buộc học sinh học tập hoàn toàn qua môi trường thực tế ảo." },
+            ans: "C"
+        },
+        {
+            q: "Câu 8: Trong môi trường học đường, 'ứng dụng AI an toàn' đòi hỏi người học và dạy tuân thủ nguyên tắc nào?",
+            opts: { A: "Khuyến khích dùng AI để tự động hoàn thành 100% các bài luận, bài tập.", B: "Chia sẻ toàn bộ dữ liệu cá nhân của nhà trường lên các nền tảng AI mã nguồn mở.", C: "Sử dụng có trách nhiệm, bảo mật dữ liệu cá nhân, giữ gìn đạo đức học thuật và không gian lận.", D: "Chặn mọi quyền truy cập vào các công cụ AI để đảm bảo an toàn tuyệt đối." },
+            ans: "C"
+        },
+        {
+            q: "Câu 9: Ngành Giáo dục cần tạo ra chuyển biến căn bản về điều gì để đáp ứng yêu cầu hội nhập?",
+            opts: { A: "Số lượng trường học được xây dựng mới ở khu vực thành thị.", B: "Chất lượng nhân lực và năng lực hội nhập quốc tế của đội ngũ cán bộ, ngang tầm trình độ khu vực.", C: "Số lượng thiết bị máy tính được trang bị cho mỗi lớp học.", D: "Tỷ lệ học sinh đi du học nước ngoài hàng năm." },
+            ans: "B"
+        },
+        {
+            q: "Câu 10: Việc đẩy mạnh kết nối, chia sẻ học liệu, đồng tác giả nghiên cứu qua nền tảng số thể hiện chủ trương nào?",
+            opts: { A: "Chuyển giao hoàn toàn quyền quản lý giáo dục cho quốc tế.", B: "Thúc đẩy chia sẻ tri thức, kết nối học thuật và hợp tác nghiên cứu không biên giới.", C: "Giảm bớt số lượng giáo viên trong nước.", D: "Xóa bỏ các chương trình giáo dục bản địa." },
+            ans: "B"
+        },
+        {
+            q: "Câu 11: Chủ trương phát triển nguồn nhân lực chất lượng cao chú trọng nâng cao kỹ năng nào cho người học?",
+            opts: { A: "Kỹ năng học tập suốt đời, năng lực số và tư duy đổi mới sáng tạo.", B: "Kỹ năng ghi chép và học thuộc lòng truyền thống.", C: "Kỹ năng lao động thủ công cường độ cao.", D: "Kỹ năng sử dụng các thiết bị công nghệ analog." },
+            ans: "A"
+        },
+        {
+            q: "Câu 12: Để bảo vệ Tổ quốc trên không gian mạng, người học cần nâng cao ý thức về vấn đề gì?",
+            opts: { A: "Nắm bắt xu hướng giải trí mới nhất.", B: "Đề cao cảnh giác, bảo đảm an toàn, an ninh mạng và chủ động phòng ngừa, ngăn chặn các thông tin xấu độc, chống phá.", C: "Tìm kiếm các phần mềm lậu để sử dụng miễn phí.", D: "Chia sẻ công khai mọi hoạt động của cá nhân và trường học lên mạng xã hội." },
+            ans: "B"
+        },
+        {
+            q: "Câu 13: Nghị quyết 59-NQ/TW định hướng nâng cao năng lực hội nhập lấy đối tượng nào làm trung tâm?",
+            opts: { A: "Cán bộ quản lý Nhà nước.", B: "Người dân và doanh nghiệp.", C: "Các nhà đầu tư nước ngoài.", D: "Các trường đại học." },
+            ans: "B"
+        },
+        {
+            q: "Câu 14: Lồng ghép tuyên truyền qua bài giảng Tin học giúp học sinh đạt được kỹ năng gì để hội nhập?",
+            opts: { A: "Lập trình để tấn công các hệ thống mạng nước ngoài.", B: "Có tư duy toàn cầu, làm chủ công nghệ mới để cạnh tranh và cống hiến, đồng thời gìn giữ bản sắc văn hóa dân tộc.", C: "Tập trung học công nghệ để đi xuất khẩu lao động.", D: "Chỉ sử dụng công nghệ để giải trí trong thời gian rảnh." },
+            ans: "B"
+        },
+        {
+            q: "Câu 15: Mô hình 'Quản trị dựa trên dữ liệu' (Data-driven) đem lại lợi ích lớn nhất nào cho các nhà trường?",
+            opts: { A: "Tiết kiệm chi phí mua giấy mực.", B: "Giúp đưa ra quyết định nhanh chóng, chính xác, phân tích được kết quả học tập để điều chỉnh phương pháp kịp thời.", C: "Theo dõi được cuộc sống riêng tư của từng giáo viên và học sinh.", D: "Tăng thời gian họp hành của hội đồng sư phạm." },
+            ans: "B"
+        },
+        {
+            q: "Câu 16: Nghị quyết 59-NQ/TW nhấn mạnh nguyên tắc cơ bản, cốt lõi nào cần phải giữ vững trong suốt quá trình hội nhập quốc tế?",
+            opts: { A: "Sẵn sàng nhượng bộ các lợi ích cốt lõi để đổi lấy sự hỗ trợ về kinh tế.", B: "Bảo đảm cao nhất lợi ích quốc gia - dân tộc trên cơ sở các nguyên tắc cơ bản của Hiến chương LHQ và luật pháp quốc tế.", C: "Chỉ hợp tác với các quốc gia có cùng thể chế chính trị.", D: "Đóng cửa một số ngành kinh tế trọng điểm để bảo hộ sản xuất trong nước." },
+            ans: "B"
+        },
+        {
+            q: "Câu 17: Trong lĩnh vực quốc phòng, an ninh, Nghị quyết 59-NQ/TW yêu cầu kết hợp chặt chẽ hội nhập quốc tế với nhiệm vụ trọng tâm nào?",
+            opts: { A: "Cắt giảm tối đa ngân sách quốc phòng để tập trung phát triển kinh tế số.", B: "Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ và an ninh quốc gia từ sớm, từ xa.", C: "Giao phó toàn bộ việc bảo đảm an ninh mạng quốc gia cho nước ngoài.", D: "Xây dựng các liên minh quân sự với các nước láng giềng." },
+            ans: "B"
+        },
+        {
+            q: "Câu 18: Về việc tiếp thu văn hóa trong quá trình hội nhập quốc tế, Nghị quyết 59-NQ/TW đặt ra yêu cầu gì?",
+            opts: { A: "Tiếp thu có chọn lọc tinh hoa văn hóa nhân loại, kiên quyết đấu tranh chống sự xâm nhập của các sản phẩm văn hóa độc hại, lai căng.", B: "Tiếp nhận mọi luồng văn hóa ngoại lai để hòa nhập với lối sống toàn cầu.", C: "Ngăn chặn triệt để mọi hình thức giao lưu văn hóa quốc tế.", D: "Loại bỏ hoàn toàn các giá trị văn hóa cũ để xây dựng văn hóa mới." },
+            ans: "A"
+        },
+        {
+            q: "Câu 19: Nghị quyết 59-NQ/TW định hướng xây dựng nền ngoại giao toàn diện, hiện đại dựa trên ba trụ cột vững chắc nào?",
+            opts: { A: "Ngoại giao kinh tế, ngoại giao văn hóa và ngoại giao quốc phòng.", B: "Đối ngoại đảng, ngoại giao nhà nước và đối ngoại nhân dân.", C: "Ngoại giao song phương, ngoại giao đa phương và ngoại giao số.", D: "Đối ngoại trung ương, đối ngoại địa phương và đối ngoại doanh nghiệp." },
+            ans: "B"
+        },
+        {
+            q: "Câu 20: Đối với cộng đồng người Việt Nam ở nước ngoài (kiều bào), Nghị quyết 59-NQ/TW xác định chủ trương gì?",
+            opts: { A: "Khuyến khích kiều bào cắt đứt liên lạc với trong nước.", B: "Thu hút, phát huy mạnh mẽ nguồn lực, trí tuệ, chất xám của cộng đồng người Việt Nam ở nước ngoài đóng góp cho đất nước.", C: "Yêu cầu toàn bộ trí thức kiều bào phải về nước làm việc.", D: "Hạn chế kiều bào tham gia vào các dự án giáo dục trong nước." },
+            ans: "B"
+        }
+    ];
+
+    const quizForm = document.getElementById('quiz-form');
+
+    // Hàm sinh HTML tự động cho các câu hỏi
+    function renderQuiz() {
+        quizData.forEach((item, index) => {
+            let questionHTML = `<div class="question-block" id="block-${index}">
+                <div class="question-title">${item.q}</div>`;
+            
+            for (const [key, value] of Object.entries(item.opts)) {
+                questionHTML += `
+                    <label class="option-label">
+                        <input type="radio" name="q${index}" value="${key}"> 
+                        <strong>${key}.</strong> ${value}
+                    </label>
+                `;
+            }
+            questionHTML += `<div id="feedback-${index}" style="margin-top:10px;"></div></div>`;
+            quizForm.innerHTML += questionHTML;
+        });
+    }
+
+    // Hàm chấm điểm và hiển thị đáp án
+    function chamDiem() {
+        const studentName = document.getElementById('studentName').value.trim();
+        const studentClass = document.getElementById('studentClass').value.trim();
+        
+        if(!studentName || !studentClass) {
+            alert("Vui lòng nhập đầy đủ Họ Tên và Lớp trước khi nộp bài!");
+            return;
+        }
+
+        let score = 0;
+        
+        quizData.forEach((item, index) => {
+            const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback-${index}`);
+            
+            if (selectedOption) {
+                if (selectedOption.value === item.ans) {
+                    score++;
+                    feedbackDiv.innerHTML = `<span class="correct">✔ Trả lời đúng!</span>`;
+                } else {
+                    feedbackDiv.innerHTML = `<span class="incorrect">✘ Sai rồi. Đáp án đúng là: ${item.ans}</span>`;
+                }
+            } else {
+                feedbackDiv.innerHTML = `<span class="incorrect">⚠ Bạn chưa chọn đáp án. Đáp án đúng là: ${item.ans}</span>`;
+            }
+        });
+
+        // Hiển thị tổng điểm kèm tên học sinh
+        const resultContainer = document.getElementById('result-container');
+        resultContainer.style.display = 'block';
+        
+        const phanTram = (score / quizData.length) * 100;
+        let xepLoai = "";
+        if (score === 20) xepLoai = "Xuất sắc!";
+        else if (score >= 16) xepLoai = "Rất tốt!";
+        else if (score >= 10) xepLoai = "Đạt yêu cầu.";
+        else xepLoai = "Cần ôn tập thêm.";
+
+        resultContainer.innerHTML = `
+            <div style="font-size: 0.8em; color: #555; margin-bottom: 10px;">Học sinh: ${studentName} - Lớp: ${studentClass}</div>
+            Điểm của bạn: ${score} / ${quizData.length} (${phanTram}%)<br>
+            <span style="font-size: 0.9em; font-weight: normal; color: #333;">Đánh giá: ${xepLoai}</span>
+        `;
+        
+        // Cuộn xuống cuối trang để xem kết quả
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Khởi chạy hàm tạo form khi tải trang
+    window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
